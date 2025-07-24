@@ -185,6 +185,13 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
               <p className="text-gray-700 text-lg leading-relaxed">
                 {currentQuestion.question}
               </p>
+              {currentQuestion.category && (
+                <div className="mt-2 inline-block">
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-md">
+                    {currentQuestion.category}
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="space-y-3 mb-8">

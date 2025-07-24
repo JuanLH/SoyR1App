@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Exam, ExamResult, Question } from './types/exam'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { sampleExams } from './data/sampleExams'
+import { enurmQuestions } from './data/enurmExams'
+import { createExamsFromENURMData } from './utils/enurm-mapper'
 import ExamList from './components/ExamList'
 import ExamInterface from './components/ExamInterface'
 import ExamResults from './components/ExamResults'
@@ -16,6 +18,39 @@ function App() {
   const [selectedExam, setSelectedExam] = useState<Exam | null>(null)
   const [currentResult, setCurrentResult] = useState<ExamResult | null>(null)
   const [examHistory, setExamHistory] = useLocalStorage<ExamResult[]>('examHistory', [])
+  const [availableExams, setAvailableExams] = useState<Exam[]>([])
+  const [isLoadingExams, setIsLoadingExams] = useState(true)
+
+  // Load ENURM exams on app startup
+  useEffect(() => {
+    const loadExams = async () => {
+      try {
+        // Generate exams from ENURM data
+        const enurmExamsBySubject = createExamsFromENURMData(enurmQuestions, {
+          groupBy: 'convocatoria'
+        })
+
+        const enurmExamsByTopic = createExamsFromENURMData(enurmQuestions)
+
+        // Combine sample exams with ENURM exams
+        const allExams = [
+          ...sampleExams,
+          ...enurmExamsBySubject,
+          ...enurmExamsByTopic
+        ]
+
+        setAvailableExams(allExams)
+      } catch (error) {
+        console.error('Error loading ENURM exams:', error)
+        // Fallback to sample exams only
+        setAvailableExams(sampleExams)
+      } finally {
+        setIsLoadingExams(false)
+      }
+    }
+
+    loadExams()
+  }, [])
 
   const handleStartExam = (exam: Exam) => {
     setSelectedExam(exam)
@@ -47,12 +82,13 @@ function App() {
   const handleViewResult = (result: ExamResult) => {
     setCurrentResult(result)
     // Find the exam for this result
-    const exam = sampleExams.find(e => e.id === result.examId)
+    const exam = availableExams.find(e => e.id === result.examId)
     if (exam) {
       setSelectedExam(exam)
     }
     setCurrentView('examResults')
   }
+
 
   const handleExitExam = () => {
     const confirmExit = window.confirm(
@@ -99,11 +135,23 @@ function App() {
   }
 
   const renderContent = () => {
+    if (isLoadingExams) {
+      return (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+            <h2 className="text-xl font-semibold text-gray-700 mb-2">Loading ENURM Exams...</h2>
+            <p className="text-gray-500">Preparing your exam content</p>
+          </div>
+        </div>
+      )
+    }
+
     switch (currentView) {
       case 'examList':
         return (
           <ExamList
-            exams={sampleExams}
+            exams={availableExams}
             onStartExam={handleStartExam}
           />
         )
@@ -135,6 +183,7 @@ function App() {
             onBackToExams={handleBackToExams}
           />
         )
+
 
       default:
         return null

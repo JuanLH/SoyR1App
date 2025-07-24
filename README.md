@@ -104,12 +104,17 @@ src/
 npm install
 ```
 
-2. **Start development server:**
+2. **Add your ENURM data (optional):**
+   - Open `src/data/enurmExams.ts`
+   - Replace the sample questions with your actual ENURM exam data
+   - Follow the format shown in the file
+
+3. **Start development server:**
 ```bash
 npm run dev
 ```
 
-3. **Open your browser:**
+4. **Open your browser:**
 Navigate to `http://localhost:3000`
 
 ### Available Scripts
