@@ -1,32 +1,39 @@
 import axios from 'axios'
+import { getCookie } from '../utils/cookies'
 
-// Create axios instance with base configuration
+// ─── Configuration ────────────────────────────────────────────────────────────
+// Change this value to point to a different backend.
+export const API_BASE_URL = 'https://localhost:7007'
+
+// ─── Axios instance ───────────────────────────────────────────────────────────
 const api = axios.create({
-  baseURL: 'https://jsonplaceholder.typicode.com',
+  baseURL: API_BASE_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
 })
 
-// Request interceptor
+// ─── Request interceptor — attach JWT automatically ───────────────────────────
 api.interceptors.request.use(
   (config) => {
-    // Add auth token or other headers here if needed
-    console.log('Making request to:', config.url)
+    const token = getCookie('auth_token')
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`
+    }
     return config
   },
-  (error) => {
-    return Promise.reject(error)
-  }
+  (error) => Promise.reject(error)
 )
 
-// Response interceptor
+// ─── Response interceptor — handle global errors ──────────────────────────────
 api.interceptors.response.use(
-  (response) => {
-    return response
-  },
+  (response) => response,
   (error) => {
+    if (error.response?.status === 401) {
+      // Token expired or invalid — let session guard handle the redirect
+      console.warn('Unauthorized — session may have expired.')
+    }
     console.error('API Error:', error.response?.data || error.message)
     return Promise.reject(error)
   }

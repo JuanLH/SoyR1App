@@ -1,0 +1,13 @@
+-Create database
+-Migrate questions to the database
+-Create user autentication
+-Create API (Get the exams and save the user result)
+-Present exams and questions
+-Save the results
+-Add graphics and reports
+
+
+
+    python migrate_enurm.py --dsn "postgresql://user:password@localhost:5432/soyr1db" --json "C:\Users\Juan\Documents\1 - wk_directory\GitProjects\SoyR1App\src\data\ENURM EXAMS\ENURM-2007.json"
+
+python database\migrate_enurm.py --dsn "postgresql://user:password@localhost:5432/soyr1db" --json "src\data\ENURM EXAMS\ENURM-2024.json"
