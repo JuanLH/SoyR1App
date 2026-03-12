@@ -18,7 +18,7 @@ const ExamHistory: React.FC<ExamHistoryProps> = ({
 
   const sortedResults = [...results].sort((a, b) => {
     let comparison = 0
-    
+
     switch (sortBy) {
       case 'date':
         comparison = new Date(a.completedAt).getTime() - new Date(b.completedAt).getTime()
@@ -30,7 +30,7 @@ const ExamHistory: React.FC<ExamHistoryProps> = ({
         comparison = a.examTitle.localeCompare(b.examTitle)
         break
     }
-    
+
     return sortOrder === 'asc' ? comparison : -comparison
   })
 
@@ -54,12 +54,12 @@ const ExamHistory: React.FC<ExamHistoryProps> = ({
 
   const calculateStats = () => {
     if (results.length === 0) return null
-    
+
     const totalScore = results.reduce((sum, result) => sum + result.percentage, 0)
     const averageScore = Math.round(totalScore / results.length)
     const bestScore = Math.max(...results.map(r => r.percentage))
     const totalTimeSpent = results.reduce((sum, result) => sum + result.timeSpent, 0)
-    
+
     return {
       totalExams: results.length,
       averageScore,
@@ -161,8 +161,8 @@ const ExamHistory: React.FC<ExamHistoryProps> = ({
                         </h3>
                         <div className="flex items-center space-x-4 mt-1">
                           <span className="text-sm text-gray-500">
-                            {result.completedAt.toLocaleDateString()} at{' '}
-                            {result.completedAt.toLocaleTimeString()}
+                            {new Date(result.completedAt).toLocaleDateString()} at{' '}
+                            {new Date(result.completedAt).toLocaleTimeString()}
                           </span>
                           <span className="text-sm text-gray-500">
                             {formatTime(result.timeSpent)}
@@ -171,7 +171,7 @@ const ExamHistory: React.FC<ExamHistoryProps> = ({
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-4">
                     <div className="text-right">
                       <div className={`text-lg font-bold ${getScoreColor(result.percentage)}`}>
@@ -181,13 +181,13 @@ const ExamHistory: React.FC<ExamHistoryProps> = ({
                         {result.score}/{result.totalQuestions}
                       </div>
                     </div>
-                    
+
                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${getScoreBadgeColor(result.percentage)}`}>
                       {result.percentage >= 80 ? 'Excellent' :
-                       result.percentage >= 70 ? 'Good' :
-                       result.percentage >= 60 ? 'Average' : 'Poor'}
+                        result.percentage >= 70 ? 'Good' :
+                          result.percentage >= 60 ? 'Average' : 'Poor'}
                     </span>
-                    
+
                     <Button
                       onClick={() => onViewResult(result)}
                       variant="secondary"
@@ -197,7 +197,7 @@ const ExamHistory: React.FC<ExamHistoryProps> = ({
                     </Button>
                   </div>
                 </div>
-                
+
                 {/* Progress indicators */}
                 <div className="mt-3 flex space-x-4 text-xs text-gray-500">
                   <span>✓ {result.correctAnswers} Correct</span>

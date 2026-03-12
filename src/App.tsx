@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Exam, ExamResult } from './types/exam'
 import { useLocalStorage } from './hooks/useLocalStorage'
-import { sampleExams } from './data/sampleExams'
-import { enurmQuestions } from './data/enurmExams'
-import { createExamsFromENURMData } from './utils/enurm-mapper'
 import { isAuthenticated, logout, getSession } from './services/authService'
 import ExamList from './components/ExamList'
-import ExamInterface from './components/ExamInterface'
+import ExamRunner from './components/ExamRunner'
 import ExamResults from './components/ExamResults'
 import ExamHistory from './components/ExamHistory'
 import Button from './components/Button'
@@ -19,42 +16,24 @@ type AppView = 'landing' | 'login' | 'examList' | 'examInterface' | 'examResults
 function App() {
   const [currentView, setCurrentView] = useState<AppView>('landing')
   const [selectedExam, setSelectedExam] = useState<Exam | null>(null)
+  const [selectedExamId, setSelectedExamId] = useState<string | null>(null)
   const [currentResult, setCurrentResult] = useState<ExamResult | null>(null)
   const [examHistory, setExamHistory] = useLocalStorage<ExamResult[]>('examHistory', [])
-  const [availableExams, setAvailableExams] = useState<Exam[]>([])
-  const [isLoadingExams, setIsLoadingExams] = useState(false)
   const [sessionChecked, setSessionChecked] = useState(false)
 
   // ── Session guard — runs once on mount ──────────────────────────────────────
   useEffect(() => {
     if (isAuthenticated()) {
       setCurrentView('examList')
-      loadExams()
     } else {
       setCurrentView('landing')
     }
     setSessionChecked(true)
   }, [])
 
-  // ── Exam loading ─────────────────────────────────────────────────────────────
-  const loadExams = async () => {
-    setIsLoadingExams(true)
-    try {
-      const enurmExamsBySubject = createExamsFromENURMData(enurmQuestions, { groupBy: 'convocatoria' })
-      const enurmExamsByTopic = createExamsFromENURMData(enurmQuestions)
-      setAvailableExams([...sampleExams, ...enurmExamsBySubject, ...enurmExamsByTopic])
-    } catch (error) {
-      console.error('Error loading ENURM exams:', error)
-      setAvailableExams(sampleExams)
-    } finally {
-      setIsLoadingExams(false)
-    }
-  }
-
   // ── Auth handlers ────────────────────────────────────────────────────────────
   const handleLoginSuccess = () => {
     setCurrentView('examList')
-    loadExams()
   }
 
   const handleLogout = () => {
@@ -67,6 +46,7 @@ function App() {
   // ── Exam handlers ─────────────────────────────────────────────────────────────
   const handleStartExam = (exam: Exam) => {
     setSelectedExam(exam)
+    setSelectedExamId(exam.id)
     setCurrentView('examInterface')
   }
 
@@ -82,6 +62,7 @@ function App() {
 
   const handleBackToExams = () => {
     setSelectedExam(null)
+    setSelectedExamId(null)
     setCurrentResult(null)
     setCurrentView('examList')
   }
@@ -90,8 +71,18 @@ function App() {
 
   const handleViewResult = (result: ExamResult) => {
     setCurrentResult(result)
-    const exam = availableExams.find(e => e.id === result.examId)
-    if (exam) setSelectedExam(exam)
+    // Reconstruct a minimal Exam shell from the stored result so the
+    // ExamResults view can render without needing the full exam in memory.
+    setSelectedExam({
+      id: result.examId,
+      title: result.examTitle,
+      description: '',
+      duration: Math.ceil(result.timeSpent / 60),
+      questions: [],
+      category: '',
+      difficulty: 'medium',
+      totalQuestions: result.totalQuestions,
+    })
     setCurrentView('examResults')
   }
 
@@ -179,25 +170,17 @@ function App() {
       )
     }
 
-    if (isLoadingExams) {
-      return (
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4" />
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">Loading ENURM Exams…</h2>
-            <p className="text-gray-500">Preparing your exam content</p>
-          </div>
-        </div>
-      )
-    }
-
     switch (currentView) {
       case 'examList':
-        return <ExamList exams={availableExams} onStartExam={handleStartExam} />
+        return <ExamList onStartExam={handleStartExam} />
 
       case 'examInterface':
-        return selectedExam ? (
-          <ExamInterface exam={selectedExam} onExamComplete={handleExamComplete} onExitExam={handleExitExam} />
+        return selectedExamId ? (
+          <ExamRunner
+            examId={selectedExamId}
+            onExamComplete={handleExamComplete}
+            onExitExam={handleExitExam}
+          />
         ) : null
 
       case 'examResults':

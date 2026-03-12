@@ -1,10 +1,61 @@
+// ─── API Models (backend response shapes) ────────────────────────────────────
+
+/** Matches the shape returned by GET /api/Exams */
+export interface ExamDto {
+  id: string
+  title: string
+  description: string | null
+  callName: string
+  year: number
+  category: string | null
+  subject: string | null
+  difficulty: 'easy' | 'medium' | 'hard'
+  durationMins: number
+  isPublished: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+/** Matches the question shape returned by GET /api/Exams/{id}/detail */
+export interface QuestionDto {
+  id: string
+  examId: string
+  number: number
+  body: string           // → Question.question
+  imageName: string | null
+  option1: string
+  option2: string
+  option3: string
+  option4: string
+  option5: string | null
+  correctOption: number  // 1-based → Question.correctAnswer (0-based)
+  subject: string        // → Question.category
+  topic: string
+  subtopic: string
+  difficulty: number
+  hasVideo: boolean
+  createdAt: string
+}
+
+/** Matches the shape returned by GET /api/Exams/{id}/detail */
+export interface ExamDetailDto extends ExamDto {
+  questions: QuestionDto[]
+}
+
+// ─── Local App Models ─────────────────────────────────────────────────────────
+
 export interface Question {
   id: string
-  question: string
-  options: string[]
-  correctAnswer: number
+  number?: number        // question number within exam
+  question: string       // mapped from QuestionDto.body
+  options: string[]      // built from option1–option5 (non-null)
+  correctAnswer: number  // 0-based (QuestionDto.correctOption - 1)
   explanation?: string
-  category?: string
+  category?: string      // mapped from QuestionDto.subject
+  topic?: string
+  subtopic?: string
+  imageName?: string | null
+  hasVideo?: boolean
 }
 
 export interface Exam {
@@ -48,6 +99,8 @@ export interface ExamResult {
   completedAt: Date
   answers: UserAnswer[]
   percentage: number
+  /** Full question list — embedded so Detailed Results works after localStorage rehydration */
+  questions?: Question[]
 }
 
 export interface ExamHistory {
