@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Exam, ExamSession, UserAnswer, ExamResult } from '../types/exam'
+import { Exam, ExamSession, ExamResult } from '../types/exam'
 import { useTimer } from '../hooks/useTimer'
 import Button from './Button'
+import ConfirmDialog from './ConfirmDialog'
+import { saveExamResult } from '../services/resultService'
 
 interface ExamInterfaceProps {
   exam: Exam
@@ -29,8 +31,9 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
   })
 
   const [questionStartTime, setQuestionStartTime] = useState(Date.now())
+  const [showSubmitConfirm, setShowSubmitConfirm] = useState(false)
 
-  const { timeRemaining, formatTime, isTimeUp } = useTimer({
+  const { timeRemaining, formatTime, isTimeUp: _isTimeUp } = useTimer({
     initialTime: exam.duration * 60,
     onTimeUp: handleTimeUp,
     autoStart: true
@@ -100,12 +103,39 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
     }
   }
 
+  const unansweredCount = session.answers.filter(a => a.selectedAnswer === null).length
+  const markedForReviewCount = session.answers.filter(a => a.isMarkedForReview).length
+
+  const handleSubmitClick = () => {
+    setShowSubmitConfirm(true)
+  }
+
+  const handleConfirmSubmit = () => {
+    setShowSubmitConfirm(false)
+    completeExam()
+  }
+
   const completeExam = () => {
     updateQuestionTime()
-    
+
+    const completedAt = new Date()
+    const timeSpentSecs = (exam.duration * 60) - timeRemaining
+
     const correctAnswers = session.answers.filter(
       (answer, index) => answer.selectedAnswer === exam.questions[index].correctAnswer
     ).length
+
+    const incorrectAnswers = session.answers.filter(
+      (answer, index) =>
+        answer.selectedAnswer !== null &&
+        answer.selectedAnswer !== exam.questions[index].correctAnswer
+    ).length
+
+    const unansweredQuestions = session.answers.filter(
+      answer => answer.selectedAnswer === null
+    ).length
+
+    const percentage = Math.round((correctAnswers / exam.questions.length) * 100)
 
     const result: ExamResult = {
       id: `result-${Date.now()}`,
@@ -114,19 +144,32 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
       score: correctAnswers,
       totalQuestions: exam.questions.length,
       correctAnswers,
-      incorrectAnswers: session.answers.filter(
-        (answer, index) => 
-          answer.selectedAnswer !== null && 
-          answer.selectedAnswer !== exam.questions[index].correctAnswer
-      ).length,
-      unansweredQuestions: session.answers.filter(answer => answer.selectedAnswer === null).length,
-      timeSpent: (exam.duration * 60) - timeRemaining,
-      completedAt: new Date(),
+      incorrectAnswers,
+      unansweredQuestions,
+      timeSpent: timeSpentSecs,
+      completedAt,
       answers: session.answers,
-      percentage: Math.round((correctAnswers / exam.questions.length) * 100)
+      percentage,
     }
 
+    // Show results immediately — persist to backend in the background
     onExamComplete(result)
+
+    saveExamResult(
+      session,
+      exam.questions,
+      completedAt,
+      timeSpentSecs,
+      correctAnswers,
+      incorrectAnswers,
+      unansweredQuestions,
+      correctAnswers,   // score == correctAnswers count
+      percentage,
+    ).then(resultId => {
+      if (resultId) console.info('[ExamInterface] Result saved:', resultId)
+    }).catch(err => {
+      console.warn('[ExamInterface] Could not save result to API:', err)
+    })
   }
 
   const currentQuestion = exam.questions[session.currentQuestionIndex]
@@ -135,7 +178,19 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
   const answeredCount = session.answers.filter(a => a.selectedAnswer !== null).length
   const markedCount = session.answers.filter(a => a.isMarkedForReview).length
 
+  const buildSubmitMessage = () => {
+    const parts: string[] = []
+    if (unansweredCount > 0)
+      parts.push(`• ${unansweredCount} question${unansweredCount > 1 ? 's' : ''} left unanswered`)
+    if (markedForReviewCount > 0)
+      parts.push(`• ${markedForReviewCount} question${markedForReviewCount > 1 ? 's' : ''} marked for review`)
+    if (parts.length === 0)
+      return 'All questions have been answered. Are you ready to submit?'
+    return `${parts.join('\n')}\n\nAre you sure you want to submit?`
+  }
+
   return (
+    <>
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
@@ -230,7 +285,7 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
               </Button>
               <div className="flex space-x-3">
                 {session.currentQuestionIndex === exam.questions.length - 1 ? (
-                  <Button onClick={completeExam} variant="primary">
+                  <Button onClick={handleSubmitClick} variant="primary">
                     Submit Exam
                   </Button>
                 ) : (
@@ -304,6 +359,18 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
         </div>
       </div>
     </div>
+
+    <ConfirmDialog
+      isOpen={showSubmitConfirm}
+      title="Submit Exam"
+      message={buildSubmitMessage()}
+      confirmText="Submit"
+      cancelText="Keep Reviewing"
+      variant={unansweredCount > 0 || markedForReviewCount > 0 ? 'warning' : 'info'}
+      onConfirm={handleConfirmSubmit}
+      onCancel={() => setShowSubmitConfirm(false)}
+    />
+    </>  
   )
 }
 

@@ -1,9 +1,7 @@
 import axios from 'axios'
 import { getCookie } from '../utils/cookies'
 
-// ─── Configuration ────────────────────────────────────────────────────────────
-// Change this value to point to a different backend.
-export const API_BASE_URL = 'https://localhost:7007'
+import { API_BASE_URL } from '../config'
 
 // ─── Axios instance ───────────────────────────────────────────────────────────
 const api = axios.create({

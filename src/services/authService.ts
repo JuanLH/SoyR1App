@@ -1,7 +1,6 @@
 import { setCookie, getCookie, deleteCookie } from '../utils/cookies'
 
-// ─── Configuration ────────────────────────────────────────────────────────────
-export const API_BASE_URL = 'https://localhost:7007'
+import { API_BASE_URL } from '../config'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 export interface LoginResponse {
