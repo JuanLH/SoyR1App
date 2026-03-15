@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Exam, Question, ExamResult, QuestionDto, ExamDetailDto } from '../types/exam'
 import { getExamDetail } from '../services/examService'
 import { getCookie } from '../utils/cookies'
@@ -51,6 +52,7 @@ function adaptDetail(dto: ExamDetailDto): Exam {
 // ─── Component ─────────────────────────────────────────────────────────────────
 
 const ExamRunner: React.FC<ExamRunnerProps> = ({ examId, onExamComplete, onExitExam }) => {
+    const { t } = useTranslation()
     const [exam, setExam] = useState<Exam | null>(null)
     const [isLoading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -83,7 +85,7 @@ const ExamRunner: React.FC<ExamRunnerProps> = ({ examId, onExamComplete, onExitE
                 const msg =
                     err instanceof Error
                         ? err.message
-                        : 'Failed to load exam. Please try again.'
+                        : t('examRunner.errorTitle')
                 setError(msg)
             } finally {
                 if (!cancelled) setLoading(false)
@@ -100,8 +102,8 @@ const ExamRunner: React.FC<ExamRunnerProps> = ({ examId, onExamComplete, onExitE
             <div className="flex items-center justify-center min-h-screen bg-gray-50">
                 <div className="text-center">
                     <div className="inline-block animate-spin rounded-full h-14 w-14 border-b-2 border-blue-600 mb-5" />
-                    <h2 className="text-xl font-semibold text-gray-700 mb-1">Loading Exam…</h2>
-                    <p className="text-gray-500">Fetching questions from the server</p>
+                    <h2 className="text-xl font-semibold text-gray-700 mb-1">{t('examRunner.loading')}</h2>
+                    <p className="text-gray-500">{t('examRunner.loadingDesc')}</p>
                 </div>
             </div>
         )
@@ -113,7 +115,7 @@ const ExamRunner: React.FC<ExamRunnerProps> = ({ examId, onExamComplete, onExitE
             <div className="flex items-center justify-center min-h-screen bg-gray-50">
                 <div className="text-center max-w-md mx-auto p-6">
                     <div className="text-6xl mb-4">⚠️</div>
-                    <h2 className="text-xl font-semibold text-gray-700 mb-2">Could not load exam</h2>
+                    <h2 className="text-xl font-semibold text-gray-700 mb-2">{t('examRunner.errorTitle')}</h2>
                     <p className="text-gray-500 mb-6">{error ?? 'Unknown error occurred.'}</p>
                     <div className="flex justify-center gap-3">
                         <button
@@ -125,19 +127,19 @@ const ExamRunner: React.FC<ExamRunnerProps> = ({ examId, onExamComplete, onExitE
                                 getExamDetail(examId)
                                     .then((d) => { setExam(adaptDetail(d)); setLoading(false) })
                                     .catch((e) => {
-                                        setError(e instanceof Error ? e.message : 'Retry failed.')
+                                        setError(e instanceof Error ? e.message : t('examRunner.errorTitle'))
                                         setLoading(false)
                                     })
                             }}
                             className="px-5 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
                         >
-                            Retry
+                            {t('examRunner.retry')}
                         </button>
                         <button
                             onClick={onExitExam}
                             className="px-5 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
                         >
-                            Back to Exams
+                            {t('examRunner.back')}
                         </button>
                     </div>
                 </div>

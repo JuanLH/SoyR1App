@@ -1,18 +1,13 @@
 import React from 'react'
-
-// ─────────────────────────────────────────────────────────────────────────────
-// CUSTOMIZATION — edit these two constants to change the landing page text.
-// ─────────────────────────────────────────────────────────────────────────────
-const APP_TITLE = 'Welcome to SoyR1App'
-const APP_DESCRIPTION =
-    'Your all-in-one platform for ENURM exam preparation. Practice with real exam questions, track your progress, and boost your confidence before the big day.'
-// ─────────────────────────────────────────────────────────────────────────────
+import { useTranslation } from 'react-i18next'
 
 interface LandingPageProps {
     onNavigateToLogin: () => void
 }
 
 const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) => {
+    const { t } = useTranslation()
+    
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 relative overflow-hidden">
             {/* Ambient background orbs */}
@@ -69,12 +64,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) => {
 
                     {/* Title */}
                     <h1 className="text-4xl md:text-5xl font-extrabold text-white leading-tight">
-                        {APP_TITLE}
+                        {t('landing.title')}
                     </h1>
 
                     {/* Description */}
                     <p className="text-lg text-slate-300 leading-relaxed max-w-md">
-                        {APP_DESCRIPTION}
+                        {t('landing.subtitle')}
                     </p>
 
                     {/* Login button */}
@@ -99,7 +94,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) => {
                         >
                             <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14" />
                         </svg>
-                        Login to Continue
+                        {t('landing.getStarted')}
                     </button>
                 </div>
 

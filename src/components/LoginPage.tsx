@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { login } from '../services/authService'
 
 interface LoginPageProps {
@@ -12,6 +13,7 @@ interface FormErrors {
 }
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLanding }) => {
+    const { t } = useTranslation()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [errors, setErrors] = useState<FormErrors>({})
@@ -24,13 +26,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLanding }
         const newErrors: FormErrors = {}
 
         if (!email.trim()) {
-            newErrors.email = 'Email is required.'
+            newErrors.email = t('login.errors.emailRequired')
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            newErrors.email = 'Please enter a valid email address.'
+            newErrors.email = t('login.errors.emailInvalid')
         }
 
         if (!password) {
-            newErrors.password = 'Password is required.'
+            newErrors.password = t('login.errors.passwordRequired')
         }
 
         setErrors(newErrors)
@@ -74,8 +76,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLanding }
                     </div>
 
                     {/* Heading */}
-                    <h2 className="text-2xl font-extrabold text-white text-center mb-1">Sign in</h2>
-                    <p className="text-slate-400 text-sm text-center mb-8">Enter your credentials to access the platform</p>
+                    <h2 className="text-2xl font-extrabold text-white text-center mb-1">{t('login.title')}</h2>
+                    <p className="text-slate-400 text-sm text-center mb-8">{t('login.subtitle')}</p>
 
                     {/* API error banner */}
                     {apiError && (
@@ -98,7 +100,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLanding }
                         {/* Email */}
                         <div>
                             <label htmlFor="login-email" className="block text-sm font-medium text-slate-300 mb-1.5">
-                                Email
+                                {t('login.emailLabel')}
                             </label>
                             <input
                                 id="login-email"
@@ -106,7 +108,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLanding }
                                 autoComplete="email"
                                 value={email}
                                 onChange={(e) => { setEmail(e.target.value); setErrors(prev => ({ ...prev, email: undefined })) }}
-                                placeholder="you@example.com"
+                                placeholder={t('login.emailPlaceholder')}
                                 className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-slate-500
                             focus:outline-none focus:ring-2 transition-colors
                             ${errors.email
@@ -122,7 +124,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLanding }
                         {/* Password */}
                         <div>
                             <label htmlFor="login-password" className="block text-sm font-medium text-slate-300 mb-1.5">
-                                Password
+                                {t('login.passwordLabel')}
                             </label>
                             <div className="relative">
                                 <input
@@ -131,7 +133,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLanding }
                                     autoComplete="current-password"
                                     value={password}
                                     onChange={(e) => { setPassword(e.target.value); setErrors(prev => ({ ...prev, password: undefined })) }}
-                                    placeholder="••••••••"
+                                    placeholder={t('login.passwordPlaceholder')}
                                     className={`w-full px-4 py-3 pr-11 rounded-xl bg-white/5 border text-white placeholder-slate-500
                               focus:outline-none focus:ring-2 transition-colors
                               ${errors.password
@@ -183,10 +185,10 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLanding }
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
                                     </svg>
-                                    Signing in…
+                                    {t('login.buttonLoading')}
                                 </>
                             ) : (
-                                'Login'
+                                t('login.button')
                             )}
                         </button>
                     </form>
@@ -198,7 +200,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLanding }
                             onClick={onBackToLanding}
                             className="text-sm text-slate-400 hover:text-slate-200 transition-colors underline underline-offset-2"
                         >
-                            ← Back to home
+                            {t('login.backToHome')}
                         </button>
                     </div>
 

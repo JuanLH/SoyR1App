@@ -1,0 +1,169 @@
+{
+  "app": {
+    "title": "App de Estudio",
+    "logout": "Cerrar Sesión",
+    "exams": "Exámenes",
+    "history": "Historial",
+    "welcome": "Bienvenido"
+  },
+  "landing": {
+    "title": "Domina tus exámenes con confianza",
+    "subtitle": "Practica con exámenes anteriores, sigue tu progreso y prepárate para el éxito.",
+    "getStarted": "Comenzar",
+    "features": {
+      "practice": "Modo práctica",
+      "practiceDesc": "Realiza exámenes completos con retroalimentación en tiempo real",
+      "analytics": "Analítica detallada",
+      "analyticsDesc": "Haz seguimiento de tu rendimiento por categorías",
+      "study": "Estudia a tu ritmo",
+      "studyDesc": "Pausa y reanuda exámenes en cualquier momento"
+    }
+  },
+  "login": {
+    "title": "Iniciar Sesión",
+    "subtitle": "Ingresa tus credenciales para acceder a la plataforma",
+    "emailLabel": "Correo",
+    "emailPlaceholder": "tu@ejemplo.com",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "••••••••",
+    "button": "Entrar",
+    "buttonLoading": "Iniciando sesión…",
+    "backToHome": "← Volver al inicio",
+    "errors": {
+      "emailRequired": "El correo es obligatorio.",
+      "emailInvalid": "Por favor ingresa un correo válido.",
+      "passwordRequired": "La contraseña es obligatoria."
+    }
+  },
+  "examList": {
+    "title": "Exámenes Disponibles",
+    "subtitle": "Elige un examen para poner a prueba tus conocimientos",
+    "searchPlaceholder": "Buscar por título, categoría o materia…",
+    "loading": "Cargando Exámenes…",
+    "loadingDesc": "Obteniendo exámenes disponibles del servidor",
+    "errorTitle": "No se pudieron cargar los exámenes",
+    "retry": "Reintentar",
+    "noExamsTitle": "No hay exámenes disponibles",
+    "noExamsDesc": "Vuelve más tarde para ver nuevos exámenes",
+    "noResultsTitle": "No se encontraron exámenes",
+    "noResultsDesc": "Intenta ajustar los términos de búsqueda o explora todos los exámenes",
+    "clearSearch": "Limpiar Búsqueda",
+    "duration": "Duración: {{minutes}}m",
+    "questions": "Preguntas: {{count}}",
+    "start": "Comenzar"
+  },
+  "examRunner": {
+    "loading": "Cargando Examen…",
+    "loadingDesc": "Obteniendo preguntas del servidor",
+    "errorTitle": "No se pudo cargar el examen",
+    "retry": "Reintentar",
+    "back": "Volver a Exámenes"
+  },
+  "examInterface": {
+    "questionOf": "Pregunta {{current}} de {{total}}",
+    "timeRemaining": "Tiempo Restante",
+    "exit": "Salir del Examen",
+    "question": "Pregunta {{number}}",
+    "markForReview": "☆ Marcar para Revisión",
+    "marked": "★ Marcada",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "submit": "Enviar Examen",
+    "navigator": {
+      "title": "Navegador de Preguntas",
+      "answered": "Respondidas:",
+      "marked": "Marcadas:",
+      "legendAnswered": "Respondida",
+      "legendMarked": "Para Revisión",
+      "legendNotAnswered": "Sin Responder"
+    },
+    "confirm": {
+      "title": "Enviar Examen",
+      "unanswered": "• {{count}} pregunta sin responder",
+      "unanswered_plural": "• {{count}} preguntas sin responder",
+      "marked": "• {{count}} pregunta marcada para revisión",
+      "marked_plural": "• {{count}} preguntas marcadas para revisión",
+      "ready": "Todas las preguntas han sido respondidas. ¿Estás listo para enviar?",
+      "sure": "\n\n¿Estás seguro de que deseas enviar?",
+      "submitBtn": "Enviar",
+      "cancelBtn": "Seguir Revisando"
+    }
+  },
+  "examResults": {
+    "title": "¡Examen Completado!",
+    "summary": {
+      "correct": "Correctas",
+      "incorrect": "Incorrectas",
+      "unanswered": "Sin Responder",
+      "timeSpent": "Tiempo"
+    },
+    "analysis": {
+      "title": "Análisis de Rendimiento",
+      "score": "Puntaje",
+      "completedOn": "Completado el:",
+      "grade": "Calificación:",
+      "grades": {
+        "excellent": "Excelente",
+        "good": "Bueno",
+        "average": "Promedio",
+        "poor": "Necesita Mejorar"
+      }
+    },
+    "buttons": {
+      "showDetails": "Mostrar Detalles",
+      "hideDetails": "Ocultar Detalles",
+      "retake": "Reintentar Examen",
+      "back": "Volver a Exámenes"
+    },
+    "details": {
+      "title": "Resultados Detallados",
+      "notAvailable": "Los detalles de las preguntas no están disponibles para este resultado.",
+      "question": "Pregunta {{number}}",
+      "marked": "Marcada para Revisión",
+      "status": {
+        "correct": "Correcta",
+        "incorrect": "Incorrecta",
+        "unanswered": "Sin Responder"
+      },
+      "explanation": "Explicación:",
+      "timeSpent": "Tiempo invertido: {{time}}"
+    }
+  },
+  "examHistory": {
+    "title": "Historial de Exámenes",
+    "subtitle": "Sigue tu progreso y revisa resultados pasados",
+    "back": "Volver a Exámenes",
+    "stats": {
+      "exams": "Exámenes",
+      "average": "Puntaje Prom.",
+      "best": "Mejor Puntaje",
+      "time": "Tiempo Total"
+    },
+    "table": {
+      "title": "Resultados",
+      "sort": {
+        "dateDesc": "Fecha (Nuevos)",
+        "dateAsc": "Fecha (Antiguos)",
+        "scoreDesc": "Puntaje (Mayor)",
+        "scoreAsc": "Puntaje (Menor)",
+        "titleAsc": "Título (A-Z)",
+        "titleDesc": "Título (Z-A)"
+      },
+      "viewDetails": "Ver Detalles",
+      "correct": "✓ {{count}} Correctas",
+      "incorrect": "✗ {{count}} Incorrectas",
+      "unanswered": "○ {{count}} Sin Responder",
+      "grades": {
+        "excellent": "Excelente",
+        "good": "Bueno",
+        "average": "Promedio",
+        "poor": "Pobre"
+      }
+    },
+    "empty": {
+      "title": "Aún no hay historial",
+      "subtitle": "Toma tu primer examen para ver los resultados aquí",
+      "start": "Comenzar Primer Examen"
+    }
+  }
+}

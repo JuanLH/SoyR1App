@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ExamDto, Exam } from '../types/exam'
 import { fetchExams } from '../services/examService'
 import { getCookie } from '../utils/cookies'
@@ -14,6 +15,7 @@ interface ExamListProps {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const ExamList: React.FC<ExamListProps> = ({ onStartExam }) => {
+  const { t } = useTranslation()
   // ── State ──────────────────────────────────────────────────────────────────
   const [exams, setExams] = useState<ExamDto[]>([])
   const [isLoading, setLoading] = useState(true)
@@ -44,7 +46,7 @@ const ExamList: React.FC<ExamListProps> = ({ onStartExam }) => {
       } catch (err: unknown) {
         if (!cancelled) {
           const msg =
-            err instanceof Error ? err.message : 'Failed to load exams.'
+            err instanceof Error ? err.message : t('examList.errorTitle')
           setError(msg)
         }
       } finally {
@@ -88,8 +90,8 @@ const ExamList: React.FC<ExamListProps> = ({ onStartExam }) => {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4" />
-          <h2 className="text-xl font-semibold text-gray-700 mb-1">Loading Exams…</h2>
-          <p className="text-gray-500">Fetching available exams from the server</p>
+          <h2 className="text-xl font-semibold text-gray-700 mb-1">{t('examList.loading')}</h2>
+          <p className="text-gray-500">{t('examList.loadingDesc')}</p>
         </div>
       </div>
     )
@@ -101,13 +103,13 @@ const ExamList: React.FC<ExamListProps> = ({ onStartExam }) => {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center max-w-md mx-auto p-6">
           <div className="text-red-400 text-6xl mb-4">⚠️</div>
-          <h2 className="text-xl font-semibold text-gray-700 mb-2">Could not load exams</h2>
+          <h2 className="text-xl font-semibold text-gray-700 mb-2">{t('examList.errorTitle')}</h2>
           <p className="text-gray-500 mb-4">{error}</p>
           <button
             onClick={() => window.location.reload()}
             className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
           >
-            Retry
+            {t('examList.retry')}
           </button>
         </div>
       </div>
@@ -119,8 +121,8 @@ const ExamList: React.FC<ExamListProps> = ({ onStartExam }) => {
     <div className="max-w-4xl mx-auto p-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Available Exams</h1>
-        <p className="text-gray-600">Choose an exam to test your knowledge</p>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">{t('examList.title')}</h1>
+        <p className="text-gray-600">{t('examList.subtitle')}</p>
       </div>
 
       {/* Search */}
@@ -133,7 +135,7 @@ const ExamList: React.FC<ExamListProps> = ({ onStartExam }) => {
           </div>
           <input
             type="text"
-            placeholder="Search by title, category or subject…"
+            placeholder={t('examList.searchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearch(e.target.value)}
             className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
@@ -159,19 +161,19 @@ const ExamList: React.FC<ExamListProps> = ({ onStartExam }) => {
             {searchTerm.trim() ? '🔍' : '📚'}
           </div>
           <h3 className="text-xl font-medium text-gray-600 mb-2">
-            {searchTerm.trim() ? 'No exams found' : 'No exams available'}
+            {searchTerm.trim() ? t('examList.noResultsTitle') : t('examList.noExamsTitle')}
           </h3>
           <p className="text-gray-500">
             {searchTerm.trim()
-              ? 'Try adjusting your search terms or browse all available exams'
-              : 'Check back later for new exams'}
+              ? t('examList.noResultsDesc')
+              : t('examList.noExamsDesc')}
           </p>
           {searchTerm.trim() && (
             <button
               onClick={() => setSearch('')}
               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
             >
-              Clear Search
+              {t('examList.clearSearch')}
             </button>
           )}
         </div>

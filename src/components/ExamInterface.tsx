@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Exam, ExamSession, ExamResult } from '../types/exam'
 import { useTimer } from '../hooks/useTimer'
 import Button from './Button'
@@ -16,6 +17,7 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
   onExamComplete,
   onExitExam,
 }) => {
+  const { t } = useTranslation()
   const [session, setSession] = useState<ExamSession>({
     examId: exam.id,
     startTime: new Date(),
@@ -181,12 +183,12 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
   const buildSubmitMessage = () => {
     const parts: string[] = []
     if (unansweredCount > 0)
-      parts.push(`• ${unansweredCount} question${unansweredCount > 1 ? 's' : ''} left unanswered`)
+      parts.push(t('examInterface.confirm.unanswered', { count: unansweredCount }))
     if (markedForReviewCount > 0)
-      parts.push(`• ${markedForReviewCount} question${markedForReviewCount > 1 ? 's' : ''} marked for review`)
+      parts.push(t('examInterface.confirm.marked', { count: markedForReviewCount }))
     if (parts.length === 0)
-      return 'All questions have been answered. Are you ready to submit?'
-    return `${parts.join('\n')}\n\nAre you sure you want to submit?`
+      return t('examInterface.confirm.ready')
+    return `${parts.join('\n')}${t('examInterface.confirm.sure')}`
   }
 
   return (
@@ -199,7 +201,7 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
             <div>
               <h1 className="text-xl font-semibold text-gray-800">{exam.title}</h1>
               <p className="text-sm text-gray-600">
-                Question {session.currentQuestionIndex + 1} of {exam.questions.length}
+                {t('examInterface.questionOf', { current: session.currentQuestionIndex + 1, total: exam.questions.length })}
               </p>
             </div>
             <div className="flex items-center space-x-4">
@@ -207,10 +209,10 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
                 <div className="text-lg font-mono font-bold text-gray-800">
                   {formatTime}
                 </div>
-                <div className="text-xs text-gray-500">Time Remaining</div>
+                <div className="text-xs text-gray-500">{t('examInterface.timeRemaining')}</div>
               </div>
               <Button variant="secondary" onClick={onExitExam}>
-                Exit Exam
+                {t('examInterface.exit')}
               </Button>
             </div>
           </div>
@@ -224,7 +226,7 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
             <div className="mb-6">
               <div className="flex justify-between items-start mb-4">
                 <h2 className="text-lg font-medium text-gray-800">
-                  Question {session.currentQuestionIndex + 1}
+                  {t('examInterface.question', { number: session.currentQuestionIndex + 1 })}
                 </h2>
                 <button
                   onClick={toggleMarkForReview}
@@ -234,7 +236,7 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
                       : 'bg-gray-100 text-gray-600 border border-gray-300'
                   }`}
                 >
-                  {currentAnswer.isMarkedForReview ? '★ Marked' : '☆ Mark for Review'}
+                  {currentAnswer.isMarkedForReview ? t('examInterface.marked') : t('examInterface.markForReview')}
                 </button>
               </div>
               <p className="text-gray-700 text-lg leading-relaxed">
@@ -281,16 +283,16 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
                 disabled={session.currentQuestionIndex === 0}
                 variant="secondary"
               >
-                Previous
+                {t('examInterface.previous')}
               </Button>
               <div className="flex space-x-3">
                 {session.currentQuestionIndex === exam.questions.length - 1 ? (
                   <Button onClick={handleSubmitClick} variant="primary">
-                    Submit Exam
+                    {t('examInterface.submit')}
                   </Button>
                 ) : (
                   <Button onClick={nextQuestion} variant="primary">
-                    Next
+                    {t('examInterface.next')}
                   </Button>
                 )}
               </div>
@@ -301,15 +303,15 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
         {/* Question Navigator */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-lg shadow-sm p-4 sticky top-4">
-            <h3 className="font-medium text-gray-800 mb-4">Question Navigator</h3>
+            <h3 className="font-medium text-gray-800 mb-4">{t('examInterface.navigator.title')}</h3>
             
             <div className="mb-4 text-sm">
               <div className="flex justify-between mb-1">
-                <span>Answered:</span>
+                <span>{t('examInterface.navigator.answered')}</span>
                 <span className="font-medium">{answeredCount}/{exam.questions.length}</span>
               </div>
               <div className="flex justify-between mb-1">
-                <span>Marked:</span>
+                <span>{t('examInterface.navigator.marked')}</span>
                 <span className="font-medium">{markedCount}</span>
               </div>
             </div>
@@ -344,15 +346,15 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
             <div className="mt-4 text-xs text-gray-500">
               <div className="flex items-center mb-1">
                 <div className="w-3 h-3 bg-green-500 rounded mr-2"></div>
-                Answered
+                {t('examInterface.navigator.legendAnswered')}
               </div>
               <div className="flex items-center mb-1">
                 <div className="w-3 h-3 bg-yellow-500 rounded mr-2"></div>
-                Marked for Review
+                {t('examInterface.navigator.legendMarked')}
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-gray-200 rounded mr-2"></div>
-                Not Answered
+                {t('examInterface.navigator.legendNotAnswered')}
               </div>
             </div>
           </div>
@@ -362,10 +364,10 @@ const ExamInterface: React.FC<ExamInterfaceProps> = ({
 
     <ConfirmDialog
       isOpen={showSubmitConfirm}
-      title="Submit Exam"
+      title={t('examInterface.confirm.title')}
       message={buildSubmitMessage()}
-      confirmText="Submit"
-      cancelText="Keep Reviewing"
+      confirmText={t('examInterface.confirm.submitBtn')}
+      cancelText={t('examInterface.confirm.cancelBtn')}
       variant={unansweredCount > 0 || markedForReviewCount > 0 ? 'warning' : 'info'}
       onConfirm={handleConfirmSubmit}
       onCancel={() => setShowSubmitConfirm(false)}

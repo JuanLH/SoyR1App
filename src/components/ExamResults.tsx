@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ExamResult, Question } from '../types/exam'
 import Button from './Button'
 
@@ -15,6 +16,7 @@ const ExamResults: React.FC<ExamResultsProps> = ({
   onRetakeExam,
   onBackToExams,
 }) => {
+  const { t } = useTranslation()
   const [showDetailedResults, setShowDetailedResults] = useState(false)
 
   // result.questions is embedded by ExamRunner; fall back to the prop (e.g. retake flow)
@@ -50,14 +52,14 @@ const ExamResults: React.FC<ExamResultsProps> = ({
     const question = questions[questionIndex]
 
     if (userAnswer.selectedAnswer === null) {
-      return { status: 'unanswered', color: 'text-gray-500', bg: 'bg-gray-100' }
+      return { status: t('examResults.details.status.unanswered'), color: 'text-gray-500', bg: 'bg-gray-100' }
     }
 
     if (userAnswer.selectedAnswer === question.correctAnswer) {
-      return { status: 'correct', color: 'text-green-600', bg: 'bg-green-100' }
+      return { status: t('examResults.details.status.correct'), color: 'text-green-600', bg: 'bg-green-100' }
     }
 
-    return { status: 'incorrect', color: 'text-red-600', bg: 'bg-red-100' }
+    return { status: t('examResults.details.status.incorrect'), color: 'text-red-600', bg: 'bg-red-100' }
   }
 
   return (
@@ -69,7 +71,7 @@ const ExamResults: React.FC<ExamResultsProps> = ({
             {result.percentage}%
           </span>
         </div>
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Exam Completed!</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">{t('examResults.title')}</h1>
         <p className="text-gray-600">{result.examTitle}</p>
       </div>
 
@@ -77,29 +79,29 @@ const ExamResults: React.FC<ExamResultsProps> = ({
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="bg-white rounded-lg shadow-sm p-4 text-center">
           <div className="text-2xl font-bold text-gray-800">{result.score}</div>
-          <div className="text-sm text-gray-600">Correct</div>
+          <div className="text-sm text-gray-600">{t('examResults.summary.correct')}</div>
         </div>
         <div className="bg-white rounded-lg shadow-sm p-4 text-center">
           <div className="text-2xl font-bold text-red-600">{result.incorrectAnswers}</div>
-          <div className="text-sm text-gray-600">Incorrect</div>
+          <div className="text-sm text-gray-600">{t('examResults.summary.incorrect')}</div>
         </div>
         <div className="bg-white rounded-lg shadow-sm p-4 text-center">
           <div className="text-2xl font-bold text-gray-600">{result.unansweredQuestions}</div>
-          <div className="text-sm text-gray-600">Unanswered</div>
+          <div className="text-sm text-gray-600">{t('examResults.summary.unanswered')}</div>
         </div>
         <div className="bg-white rounded-lg shadow-sm p-4 text-center">
           <div className="text-2xl font-bold text-blue-600">{formatTime(result.timeSpent)}</div>
-          <div className="text-sm text-gray-600">Time Spent</div>
+          <div className="text-sm text-gray-600">{t('examResults.summary.timeSpent')}</div>
         </div>
       </div>
 
       {/* Performance Analysis */}
       <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Performance Analysis</h2>
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">{t('examResults.analysis.title')}</h2>
 
         <div className="mb-4">
           <div className="flex justify-between text-sm text-gray-600 mb-1">
-            <span>Score</span>
+            <span>{t('examResults.analysis.score')}</span>
             <span>{result.score}/{result.totalQuestions} ({result.percentage}%)</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
@@ -114,15 +116,15 @@ const ExamResults: React.FC<ExamResultsProps> = ({
 
         <div className="text-sm text-gray-600">
           <p className="mb-2">
-            <strong>Completed on:</strong>{' '}
-            {completedAt.toLocaleDateString()} at {completedAt.toLocaleTimeString()}
+            <strong>{t('examResults.analysis.completedOn')}</strong>{' '}
+            {completedAt.toLocaleDateString()} {completedAt.toLocaleTimeString()}
           </p>
           <p>
-            <strong>Grade:</strong> {' '}
+            <strong>{t('examResults.analysis.grade')}</strong> {' '}
             <span className={getScoreColor(result.percentage)}>
-              {result.percentage >= 80 ? 'Excellent' :
-                result.percentage >= 70 ? 'Good' :
-                  result.percentage >= 60 ? 'Average' : 'Needs Improvement'}
+              {result.percentage >= 80 ? t('examResults.analysis.grades.excellent') :
+                result.percentage >= 70 ? t('examResults.analysis.grades.good') :
+                  result.percentage >= 60 ? t('examResults.analysis.grades.average') : t('examResults.analysis.grades.poor')}
             </span>
           </p>
         </div>
@@ -135,25 +137,25 @@ const ExamResults: React.FC<ExamResultsProps> = ({
           variant="secondary"
           className="flex-1"
         >
-          {showDetailedResults ? 'Hide' : 'Show'} Detailed Results
+          {showDetailedResults ? t('examResults.buttons.hideDetails') : t('examResults.buttons.showDetails')}
         </Button>
         <Button onClick={onRetakeExam} variant="primary" className="flex-1">
-          Retake Exam
+          {t('examResults.buttons.retake')}
         </Button>
         <Button onClick={onBackToExams} variant="secondary" className="flex-1">
-          Back to Exams
+          {t('examResults.buttons.back')}
         </Button>
       </div>
 
       {/* Detailed Results */}
       {showDetailedResults && (
         <div className="bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-6">Detailed Results</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-6">{t('examResults.details.title')}</h2>
 
           <div className="space-y-6">
             {questions.length === 0 ? (
               <p className="text-gray-500 text-sm">
-                Question details are not available for this result.
+                {t('examResults.details.notAvailable')}
               </p>
             ) : (
               questions.map((question, index) => {
@@ -164,16 +166,16 @@ const ExamResults: React.FC<ExamResultsProps> = ({
                   <div key={question.id} className="border-b border-gray-200 pb-6 last:border-b-0">
                     <div className="flex justify-between items-start mb-3">
                       <h3 className="font-medium text-gray-800">
-                        Question {index + 1}
+                        {t('examResults.details.question', { number: index + 1 })}
                       </h3>
                       <div className="flex items-center space-x-2">
                         {userAnswer.isMarkedForReview && (
                           <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded">
-                            Marked for Review
+                            {t('examResults.details.marked')}
                           </span>
                         )}
                         <span className={`px-2 py-1 text-xs rounded ${answerStatus.bg} ${answerStatus.color}`}>
-                          {answerStatus.status.charAt(0).toUpperCase() + answerStatus.status.slice(1)}
+                          {answerStatus.status}
                         </span>
                       </div>
                     </div>
@@ -220,13 +222,13 @@ const ExamResults: React.FC<ExamResultsProps> = ({
 
                     {question.explanation && (
                       <div className="bg-blue-50 border border-blue-200 rounded p-3">
-                        <h4 className="font-medium text-blue-800 mb-1">Explanation:</h4>
+                        <h4 className="font-medium text-blue-800 mb-1">{t('examResults.details.explanation')}</h4>
                         <p className="text-blue-700 text-sm">{question.explanation}</p>
                       </div>
                     )}
 
                     <div className="mt-3 text-xs text-gray-500">
-                      Time spent: {formatTime(userAnswer.timeSpent)}
+                      {t('examResults.details.timeSpent', { time: formatTime(userAnswer.timeSpent) })}
                     </div>
                   </div>
                 )

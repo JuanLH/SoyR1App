@@ -1,0 +1,169 @@
+{
+  "app": {
+    "title": "Exam Study App",
+    "logout": "Logout",
+    "exams": "Exams",
+    "history": "History",
+    "welcome": "Welcome"
+  },
+  "landing": {
+    "title": "Master Your Exams with Confidence",
+    "subtitle": "Practice with past exams, track your progress, and get ready for success.",
+    "getStarted": "Get Started",
+    "features": {
+      "practice": "Practice mode",
+      "practiceDesc": "Take full exams with real-time feedback",
+      "analytics": "Detailed Analytics",
+      "analyticsDesc": "Track your performance across categories",
+      "study": "Study at your pace",
+      "studyDesc": "Pause and resume exams anytime"
+    }
+  },
+  "login": {
+    "title": "Sign in",
+    "subtitle": "Enter your credentials to access the platform",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "••••••••",
+    "button": "Login",
+    "buttonLoading": "Signing in…",
+    "backToHome": "← Back to home",
+    "errors": {
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Please enter a valid email address.",
+      "passwordRequired": "Password is required."
+    }
+  },
+  "examList": {
+    "title": "Available Exams",
+    "subtitle": "Choose an exam to test your knowledge",
+    "searchPlaceholder": "Search by title, category or subject…",
+    "loading": "Loading Exams…",
+    "loadingDesc": "Fetching available exams from the server",
+    "errorTitle": "Could not load exams",
+    "retry": "Retry",
+    "noExamsTitle": "No exams available",
+    "noExamsDesc": "Check back later for new exams",
+    "noResultsTitle": "No exams found",
+    "noResultsDesc": "Try adjusting your search terms or browse all available exams",
+    "clearSearch": "Clear Search",
+    "duration": "Duration: {{minutes}}m",
+    "questions": "Questions: {{count}}",
+    "start": "Start"
+  },
+  "examRunner": {
+    "loading": "Loading Exam…",
+    "loadingDesc": "Fetching questions from the server",
+    "errorTitle": "Could not load exam",
+    "retry": "Retry",
+    "back": "Back to Exams"
+  },
+  "examInterface": {
+    "questionOf": "Question {{current}} of {{total}}",
+    "timeRemaining": "Time Remaining",
+    "exit": "Exit Exam",
+    "question": "Question {{number}}",
+    "markForReview": "☆ Mark for Review",
+    "marked": "★ Marked",
+    "previous": "Previous",
+    "next": "Next",
+    "submit": "Submit Exam",
+    "navigator": {
+      "title": "Question Navigator",
+      "answered": "Answered:",
+      "marked": "Marked:",
+      "legendAnswered": "Answered",
+      "legendMarked": "Marked for Review",
+      "legendNotAnswered": "Not Answered"
+    },
+    "confirm": {
+      "title": "Submit Exam",
+      "unanswered": "• {{count}} question left unanswered",
+      "unanswered_plural": "• {{count}} questions left unanswered",
+      "marked": "• {{count}} question marked for review",
+      "marked_plural": "• {{count}} questions marked for review",
+      "ready": "All questions have been answered. Are you ready to submit?",
+      "sure": "\n\nAre you sure you want to submit?",
+      "submitBtn": "Submit",
+      "cancelBtn": "Keep Reviewing"
+    }
+  },
+  "examResults": {
+    "title": "Exam Completed!",
+    "summary": {
+      "correct": "Correct",
+      "incorrect": "Incorrect",
+      "unanswered": "Unanswered",
+      "timeSpent": "Time Spent"
+    },
+    "analysis": {
+      "title": "Performance Analysis",
+      "score": "Score",
+      "completedOn": "Completed on:",
+      "grade": "Grade:",
+      "grades": {
+        "excellent": "Excellent",
+        "good": "Good",
+        "average": "Average",
+        "poor": "Needs Improvement"
+      }
+    },
+    "buttons": {
+      "showDetails": "Show Detailed Results",
+      "hideDetails": "Hide Detailed Results",
+      "retake": "Retake Exam",
+      "back": "Back to Exams"
+    },
+    "details": {
+      "title": "Detailed Results",
+      "notAvailable": "Question details are not available for this result.",
+      "question": "Question {{number}}",
+      "marked": "Marked for Review",
+      "status": {
+        "correct": "Correct",
+        "incorrect": "Incorrect",
+        "unanswered": "Unanswered"
+      },
+      "explanation": "Explanation:",
+      "timeSpent": "Time spent: {{time}}"
+    }
+  },
+  "examHistory": {
+    "title": "Exam History",
+    "subtitle": "Track your progress and review past results",
+    "back": "Back to Exams",
+    "stats": {
+      "exams": "Exams Taken",
+      "average": "Average Score",
+      "best": "Best Score",
+      "time": "Total Time"
+    },
+    "table": {
+      "title": "Results",
+      "sort": {
+        "dateDesc": "Date (Newest)",
+        "dateAsc": "Date (Oldest)",
+        "scoreDesc": "Score (Highest)",
+        "scoreAsc": "Score (Lowest)",
+        "titleAsc": "Title (A-Z)",
+        "titleDesc": "Title (Z-A)"
+      },
+      "viewDetails": "View Details",
+      "correct": "✓ {{count}} Correct",
+      "incorrect": "✗ {{count}} Incorrect",
+      "unanswered": "○ {{count}} Unanswered",
+      "grades": {
+        "excellent": "Excellent",
+        "good": "Good",
+        "average": "Average",
+        "poor": "Poor"
+      }
+    },
+    "empty": {
+      "title": "No exam history yet",
+      "subtitle": "Take your first exam to see your results here",
+      "start": "Start Your First Exam"
+    }
+  }
+}

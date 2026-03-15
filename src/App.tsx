@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Exam, ExamResult } from './types/exam'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { isAuthenticated, logout, getSession } from './services/authService'
@@ -14,6 +15,7 @@ import './App.css'
 type AppView = 'landing' | 'login' | 'examList' | 'examInterface' | 'examResults' | 'examHistory'
 
 function App() {
+  const { t, i18n } = useTranslation()
   const [currentView, setCurrentView] = useState<AppView>('landing')
   const [selectedExam, setSelectedExam] = useState<Exam | null>(null)
   const [selectedExamId, setSelectedExamId] = useState<string | null>(null)
@@ -106,10 +108,10 @@ function App() {
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <span className="text-2xl">🎓</span>
-              <h1 className="text-xl font-bold text-gray-800">Exam Study App</h1>
+              <h1 className="text-xl font-bold text-gray-800">{t('app.title')}</h1>
               {session?.username && (
                 <span className="ml-3 text-sm text-gray-500 hidden sm:inline">
-                  Welcome, <span className="font-semibold text-gray-700">{session.username}</span>
+                  {t('app.welcome')}, <span className="font-semibold text-gray-700">{session.username}</span>
                   {session.role && (
                     <span className="ml-1.5 px-1.5 py-0.5 text-xs rounded-full bg-indigo-100 text-indigo-700 font-medium capitalize">
                       {session.role}
@@ -118,27 +120,33 @@ function App() {
                 </span>
               )}
             </div>
-            <div className="flex space-x-3">
+            <div className="flex space-x-3 items-center">
+              <button 
+                onClick={() => i18n.changeLanguage(i18n.language === 'es' ? 'en' : 'es')}
+                className="text-sm font-medium text-gray-500 hover:text-gray-700 px-2 py-1 rounded"
+              >
+                {i18n.language === 'es' ? 'EN' : 'ES'}
+              </button>
               <Button
                 onClick={handleBackToExams}
                 variant={currentView === 'examList' ? 'primary' : 'secondary'}
                 size="sm"
               >
-                Exams
+                {t('app.exams')}
               </Button>
               <Button
                 onClick={handleViewHistory}
                 variant={currentView === 'examHistory' ? 'primary' : 'secondary'}
                 size="sm"
               >
-                History ({examHistory.length})
+                {t('app.history')} ({examHistory.length})
               </Button>
               <Button
                 onClick={handleLogout}
                 variant="secondary"
                 size="sm"
               >
-                Logout
+                {t('app.logout')}
               </Button>
             </div>
           </div>
@@ -195,7 +203,7 @@ function App() {
 
       case 'examHistory':
         return (
-          <ExamHistory results={examHistory} onViewResult={handleViewResult} onBackToExams={handleBackToExams} />
+          <ExamHistory history={examHistory} onViewDetails={handleViewResult} onBackToExams={handleBackToExams} />
         )
 
       default:
